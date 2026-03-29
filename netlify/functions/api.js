@@ -5,19 +5,22 @@ const app = express();
 
 app.use(express.json());
 
-// CORS (penting)
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS",
+  );
   next();
 });
 
-// Route contoh
+// Route contoh (tanpa prefix /api)
 app.get("/hello", (req, res) => {
-  res.json({ message: "Hello dari Netlify Function! 🚀" });
+  res.json({ message: "Hello dari Netlify Function! ✅" });
 });
 
-// Tambahkan route lain kamu di sini nanti
-// app.use('/users', userRouter);
+// Tambahkan route lain di sini nanti, contoh:
+// app.get('/users', async (req, res) => { ... });
 
 export const handler = serverless(app);

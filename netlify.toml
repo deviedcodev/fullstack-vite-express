@@ -5,21 +5,16 @@
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
+  external_node_modules = ["express"]
 
-# Untuk netlify dev
-[dev]
-  command = "pnpm run dev"
-  targetPort = 3000          # Ubah kalau port Express kamu bukan 3000
-  port = 8888
-  framework = "#custom"
-
-# Redirect untuk production
+# Redirect API harus DULU (sebelum SPA fallback)
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/api/:splat"
   status = 200
   force = true
 
+# SPA fallback untuk React Router (harus di paling bawah)
 [[redirects]]
   from = "/*"
   to = "/index.html"
