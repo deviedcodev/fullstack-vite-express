@@ -16,10 +16,17 @@ app.use((req, res, next) => {
   next();
 });
 
-// Route contoh
+// Route contoh (support path /hello dan /api/hello)
 app.get("/hello", (req, res) => {
   res.json({
     message: "Hello dari Netlify Function! ✅",
+    success: true,
+  });
+});
+
+app.get("/api/hello", (req, res) => {
+  res.json({
+    message: "Hello dari Netlify Function (API path)! ✅",
     success: true,
   });
 });

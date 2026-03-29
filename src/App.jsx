@@ -9,8 +9,12 @@ function App() {
   const [count, setCount] = useState(0);
   useEffect(() => {
     fetch("/api/hello")
-      .then((res) => res.json())
-      .then((data) => console.log(data));
+      .then((res) => {
+        if (!res.ok) throw new Error("Network error");
+        return res.json();
+      })
+      .then((data) => console.log(data))
+      .catch((err) => console.error(err));
   }, []);
 
   return (
