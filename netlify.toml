@@ -5,14 +5,6 @@
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
-  external_node_modules = ["express", "serverless-http"]
-
-# Redirect API — harus di atas SPA fallback
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/api/:splat"
-  status = 200
-  force = true
 
 # React Router SPA fallback
 [[redirects]]
