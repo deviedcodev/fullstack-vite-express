@@ -1,34 +1,40 @@
-import express from "express";
-import serverless from "serverless-http";
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+};
 
-const app = express();
-
-app.use(express.json());
-
-// CORS
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, OPTIONS",
-  );
-  next();
-});
-
-// Route contoh (support path /hello dan /api/hello)
-app.get("/hello", (req, res) => {
-  res.json({
-    message: "Hello dari Netlify Function! ✅",
-    success: true,
+const json = (status, body) =>
+  new Response(JSON.stringify(body), {
+    status,
+    headers: {
+      "Content-Type": "application/json",
+      ...corsHeaders,
+    },
   });
-});
 
-app.get("/api/hello", (req, res) => {
-  res.json({
-    message: "Hello dari Netlify Function (API path)! ✅",
-    success: true,
+export default async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, { status: 204, headers: corsHeaders });
+  }
+
+  const { pathname } = new URL(req.url);
+  const route = pathname.replace(/^\/(\.netlify\/functions\/api|api)/, "") || "/";
+
+  if (route === "/hello" && req.method === "GET") {
+    return json(200, {
+      message: "Hello dari Netlify Function! ✅",
+      success: true,
+    });
+  }
+
+  return json(404, {
+    success: false,
+    error: "Not Found",
+    path: pathname,
   });
-});
+};
 
-export const handler = serverless(app);
+export const config = {
+  path: ["/api/*", "/.netlify/functions/api/*"],
+};
